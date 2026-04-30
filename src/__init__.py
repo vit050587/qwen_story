@@ -46,7 +46,7 @@ def create_app() -> Flask:
     app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER", "uploads")
     app.config["OUTPUT_FOLDER"] = os.getenv("OUTPUT_FOLDER", "outputs")
     app.config["SESSIONS_FILE"] = os.getenv("SESSIONS_FILE", "outputs/sessions.json")
-    app.config["PERECHEN_PDF"] = os.getenv("PERECHEN_PDF", "data/Perechen.pdf")
+    app.config["PERECHEN_XLSX"] = os.getenv("PERECHEN_XLSX", "data/Perechen.xlsx")
 
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
     os.makedirs(app.config["OUTPUT_FOLDER"], exist_ok=True)
