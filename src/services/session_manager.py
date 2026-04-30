@@ -28,12 +28,12 @@ class SessionManager:
         upload_folder: str,
         output_folder: str,
         sessions_file: str,
-        perechen_pdf: str,
+        perechen_xlsx: str,
     ):
         self.upload_folder = upload_folder
         self.output_folder = output_folder
         self.sessions_file = sessions_file
-        self.perechen_pdf = perechen_pdf
+        self.perechen_xlsx = perechen_xlsx
         self._sessions: Dict[str, Dict[str, Any]] = {}
         self._state_lock = threading.Lock()
         self._load()
@@ -182,7 +182,7 @@ class SessionManager:
         try:
             with _processing_lock:
                 searchActualNorm(
-                    target_date=extracted_date, normsList=self.perechen_pdf
+                    target_date=extracted_date, normsList=self.perechen_xlsx
                 )
                 copyActualNorm()
 

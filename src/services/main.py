@@ -15,7 +15,7 @@ def process_mopb_validation(
     gpzu_pdf_path: str,
     mopb_pdf_path: str,
     output_dir: str = "outputs",
-    perechen_pdf: str = "data/Perechen.pdf",
+    perechen_xlsx: str = "data/Perechen.xlsx",
 ) -> Dict[str, Any]:
     sessionId = str(uuid.uuid4())
     session_output_dir = os.path.join(output_dir, sessionId)
@@ -23,7 +23,7 @@ def process_mopb_validation(
 
     extracted_date = findDateInGPZU(gpzu_pdf_path)
 
-    searchActualNorm(target_date=extracted_date, normsList=perechen_pdf)
+    searchActualNorm(target_date=extracted_date, normsList=perechen_xlsx)
     copyActualNorm()
 
     searchМОРВ(MOPB_PDF=mopb_pdf_path)

@@ -28,7 +28,7 @@ def _get_manager() -> SessionManager:
             upload_folder=current_app.config["UPLOAD_FOLDER"],
             output_folder=current_app.config["OUTPUT_FOLDER"],
             sessions_file=current_app.config["SESSIONS_FILE"],
-            perechen_pdf=current_app.config["PERECHEN_PDF"],
+            perechen_xlsx=current_app.config["PERECHEN_XLSX"],
         )
     return _manager
 
