@@ -1,1 +1,54 @@
-Nothing should be ignored since the modified files are all source code files (.py) without any build artifacts, dependencies, or temporary files in the changes.
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Виртуальные окружения ---
+.venv/
+venv/
+ENV/
+env/
+activate
+
+# --- IDE и системные файлы Mac ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# --- Логи и временные файлы ---
+*.log
+tmp/
+temp/
+
+# --- ДАННЫЕ ПРИЛОЖЕНИЯ (Самое важное) ---
+# Эти папки содержат тяжелые файлы и результаты работы, их не надо хранить в git
+uploads/
+outputs/
+norms/
+data/Perechen.xlsx
+data/documents.json
+Актуальные_нормы/
+MOPB_ссылки/
+MOPB_ссылки_с_номерами/
+MOPB_сравнение/
+
+# Файлы сессий и состояния
+sessions.json
+state.json
+
+# --- Конфигурация с секретами ---
+.env
+*.key
+*.pem
+
+# --- Docker артефакты ---
+docker-compose.override.yml
