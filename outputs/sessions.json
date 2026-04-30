@@ -1,0 +1,14 @@
+{
+  "63501210-1398-4dd6-a1f8-265688ac9097": {
+    "sessionId": "63501210-1398-4dd6-a1f8-265688ac9097",
+    "created_at": "2026-04-30T07:27:44.728004Z",
+    "status": "error",
+    "first_file_name": "K MOPB.pdf",
+    "first_file_path": "./uploads/K_MOPB.pdf",
+    "second_file_name": null,
+    "second_file_path": null,
+    "extracted_date": "не найдено",
+    "files": [],
+    "error": "[Errno 2] No such file or directory: 'data/Perechen.pdf'"
+  }
+}
