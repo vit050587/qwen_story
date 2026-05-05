@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экспертиза проектной документации</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 32px 24px;
+            background: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 36px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 2px;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            color: #0f172a;
+            border-bottom: 2px solid #3b82f6;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            margin-bottom: 24px;
+            padding: 28px 30px;
+            background: #ffffff;
+            border: 1px solid #eef2f6;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            transition: box-shadow 0.15s;
+        }
+
+        .card.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            margin-right: 14px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .step-number.success {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #166534;
+        }
+
+        .step-indicator h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .upload-area {
+            margin-bottom: 24px;
+            padding: 42px 30px;
+            background: #fafcff;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .upload-area:hover:not(.disabled) {
+            background: #f1f6fe;
+            border-color: #94a3b8;
+        }
+
+        .upload-area.dragover {
+            background: #e6f0ff;
+            border-color: #3b82f6;
+        }
+
+        .upload-area.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .upload-icon {
+            margin-bottom: 16px;
+            color: #94a3b8;
+        }
+
+        .upload-text {
+            margin-bottom: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .upload-hint {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .file-info {
+            margin-bottom: 20px;
+            padding: 16px 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .file-icon {
+            margin-right: 12px;
+            font-size: 22px;
+            color: #64748b;
+        }
+
+        .file-name {
+            flex: 1;
+            font-weight: 450;
+            color: #0f172a;
+        }
+
+        .btn-icon {
+            padding: 4px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.1s;
+        }
+
+        .btn-icon:hover {
+            color: #ef4444;
+        }
+
+        .progress-bar {
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.2s;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1px solid transparent;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-primary {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1e293b;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .result-box {
+            display: flex;
+            align-items: center;
+            margin-top: 24px;
+            padding: 18px 20px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 16px;
+        }
+
+        .result-icon {
+            margin-right: 16px;
+            font-size: 28px;
+        }
+
+        .result-content {
+            flex: 1;
+        }
+
+        .result-label {
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #475569;
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #166534;
+        }
+
+        .norms-result {
+            margin-top: 20px;
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+        }
+
+        .download-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+        }
+
+        .download-item-info {
+            flex: 1;
+        }
+
+        .download-item-name {
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .download-item-size {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .download-btn {
+            padding: 8px 18px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .download-btn:hover {
+            background: #f1f5f9;
+        }
+
+        /* --- НОВЫЕ СТИЛИ ДЛЯ СТАТУСБАРА --- */
+        .status-card {
+            margin-top: 20px;
+            padding: 24px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            display: none; /* Скрыт по умолчанию */
+        }
+
+        .status-card.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .status-title {
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spinner-sm {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #cbd5e1;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            font-size: 0.95rem;
+            color: #334155;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .status-submessage {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-indeterminate {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background: #3b82f6;
+            border-radius: 4px;
+            animation: indeterminate 1.5s infinite ease-in-out;
+        }
+
+        @keyframes indeterminate {
+            0% { left: -30%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .steps-list {
+            margin-top: 16px;
+            list-style: none;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 6px;
+            transition: color 0.3s;
+        }
+
+        .step-item.completed {
+            color: #166534;
+            font-weight: 500;
+        }
+
+        .step-item.current {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .step-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 10px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .step-item.completed .step-icon {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+
+        .step-item.current .step-icon {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        /* ---------------------------------- */
+
+        /* История */
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .sessions-list {
+            display: grid;
+            gap: 12px;
+            max-height: 580px;
+            overflow-y: auto;
+        }
+
+        .session-card {
+            padding: 18px 20px;
+            background: #ffffff;
+            border: 1px solid #eef2f6;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .session-card:hover {
+            background: #fafcff;
+            border-color: #cbd5e1;
+        }
+
+        .session-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .session-id {
+            font-family: monospace;
+            color: #475569;
+        }
+
+        .session-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .session-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+            margin-bottom: 14px;
+            color: #334155;
+        }
+
+        .file-badge {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1100;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            min-width: 280px;
+            margin-bottom: 10px;
+            padding: 14px 18px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Экспертиза документации</h1>
+            <p class="subtitle">Проверка проектной документации на соответствие нормам</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('process')"><span>🔄</span> Текущая обработка</button>
+            <button class="tab-btn" onclick="switchTab('history')"><span>📚</span> История</button>
+        </div>
+
+        <div class="tab-content active" id="processTab">
+            <!-- Шаг 1 -->
+            <div class="card" id="step1">
+                <div class="step-indicator">
+                    <span class="step-number">1</span>
+                    <h2>Загрузка ГПЗУ и определение даты</h2>
+                </div>
+
+                <div class="upload-area" id="firstUploadArea">
+                    <input type="file" id="firstFileInput" accept=".pdf" hidden>
+                    <div class="upload-content">
+                        <svg class="upload-icon" viewBox="0 0 24 24" width="44" height="44">
+                            <path fill="currentColor"
+                                d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
+                        </svg>
+                        <p class="upload-text">Нажмите или перетащите PDF (ГПЗУ)</p>
+                        <p class="upload-hint">Файл будет обработан для извлечения даты</p>
+                    </div>
+                </div>
+
+                <div class="file-info" id="firstFileInfo" style="display: none;">
+                    <div class="file-details">
+                        <span class="file-icon">📄</span>
+                        <span class="file-name" id="firstFileName"></span>
+                        <button class="btn-icon" onclick="resetStep1()">✕</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="uploadProgress1"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="uploadFirstBtn" onclick="uploadFirstFile()" disabled>
+                    Загрузить и обработать
+                </button>
+
+                <div class="result-box" id="dateResult" style="display: none;">
+                    <div class="result-icon">📅</div>
+                    <div class="result-content">
+                        <div class="result-label">Извлечённая дата</div>
+                        <div class="result-value" id="extractedDate"></div>
+                    </div>
+                </div>
+
+                <div class="norms-result" id="normsResult" style="display: none;">
+                    <div class="result-header"><span>✅</span> Нормативная база готова</div>
+                    <div class="norms-files" id="normsFilesList"></div>
+                </div>
+            </div>
+
+            <!-- Шаг 2 -->
+            <div class="card disabled" id="step2">
+                <div class="step-indicator">
+                    <span class="step-number">2</span>
+                    <h2>Проектная документация (МОРВ)</h2>
+                </div>
+
+                <div class="upload-area disabled" id="secondUploadArea">
+                    <input type="file" id="secondFileInput" accept=".pdf" hidden>
+                    <div class="upload-content">
+                        <svg class="upload-icon" viewBox="0 0 24 24" width="44" height="44">
+                            <path fill="currentColor"
+                                d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
+                        </svg>
+                        <p class="upload-text">Сначала загрузите ГПЗУ</p>
+                    </div>
+                </div>
+
+                <div class="file-info" id="secondFileInfo" style="display: none;">
+                    <div class="file-details">
+                        <span class="file-icon">📄</span>
+                        <span class="file-name" id="secondFileName"></span>
+                        <button class="btn-icon" onclick="resetStep2()">✕</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="uploadProgress2"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="uploadSecondBtn" onclick="uploadSecondFile()" disabled>
+                    Загрузить и обработать
+                </button>
+
+                <!-- НОВЫЙ БЛОК: СТАТУС ОБРАБОТКИ -->
+                <div id="processingStatus" class="status-card">
+                    <div class="status-header">
+                        <div class="status-title">
+                            <span class="spinner-sm"></span>
+                            <span id="statusTitle">Обработка документа...</span>
+                        </div>
+                        <span id="statusBadge" class="session-status">В процессе</span>
+                    </div>
+                    
+                    <div class="status-message" id="statusMessage">Инициализация...</div>
+                    <div class="status-submessage" id="statusSubMessage">Это может занять несколько минут</div>
+                    
+                    <div class="progress-track">
+                        <div class="progress-indeterminate"></div>
+                    </div>
+
+                    <ul class="steps-list" id="stepsList">
+                        <li class="step-item" id="step-load"><span class="step-icon">●</span> Загрузка файла</li>
+                        <li class="step-item" id="step-extract"><span class="step-icon">●</span> Извлечение текста</li>
+                        <li class="step-item" id="step-norms"><span class="step-icon">●</span> Поиск ссылок на нормы</li>
+                        <li class="step-item" id="step-drawings"><span class="step-icon">●</span> Анализ чертежей (VLM)</li>
+                        <li class="step-item" id="step-report"><span class="step-icon">●</span> Формирование отчета</li>
+                    </ul>
+                </div>
+                <!-- КОНЕЦ БЛОКА СТАТУСА -->
+
+            </div>
+
+            <!-- Шаг 3 - результат -->
+            <div class="card" id="step3" style="display: none;">
+                <div class="step-indicator">
+                    <span class="step-number success">✓</span>
+                    <h2>Файлы готовы</h2>
+                </div>
+                <div class="download-list" id="downloadList"></div>
+                <button class="btn btn-secondary" onclick="startNewSession()">Новая сессия</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="historyTab">
+            <div class="card">
+                <div class="history-header">
+                    <h2>📋 История сессий</h2>
+                    <button class="btn-icon" onclick="loadSessions()">🔄</button>
+                </div>
+                <div class="sessions-list" id="sessionsList">Загрузка...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="sessionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Детали сессии</h3>
+                <button class="btn-icon" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function () {
+            // ---- Глобальные переменные ----
+            let currentSessionId = null;
+            let firstFileUploaded = false;
+            let firstFileProcessed = false;
+            let currentTab = 'process';
+            let statusCheckInterval = null;
+            let _firstDroppedFile = null;
+            let _secondDroppedFile = null;
+
+            // ---- Инициализация ----
+            document.addEventListener('DOMContentLoaded', () => {
+                initializeUploadAreas();
+            });
+
+            window.switchTab = function (tab) {
+                currentTab = tab;
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.closest('.tab-btn').classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(tab + 'Tab').classList.add('active');
+                if (tab === 'history') loadSessions();
+            };
+
+            async function loadSessions() {
+                const list = document.getElementById('sessionsList');
+                list.innerHTML = '<div style="text-align:center;padding:20px;"><span class="spinner"></span></div>';
+                try {
+                    const resp = await fetch('/fire/api/sessions');
+                    const data = await resp.json();
+                    if (!data.sessions || !data.sessions.length) {
+                        list.innerHTML = '<div class="empty-state" style="padding:40px;text-align:center;color:#64748b;">Нет сохранённых сессий</div>';
+                        return;
+                    }
+                    list.innerHTML = '';
+                    // Сортировка: новые сверху
+                    const sorted = data.sessions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    sorted.forEach(s => list.appendChild(createSessionCard(s)));
+                } catch (e) {
+                    console.error('Ошибка загрузки:', e);
+                    list.innerHTML = `<div style="padding:30px;color:#b91c1c;">Ошибка загрузки: ${e.message}</div>`;
+                }
+            }
+
+            function createSessionCard(session) {
+                const card = document.createElement('div');
+                card.className = 'session-card';
+                card.onclick = () => showSessionDetails(session);
+                const date = new Date(session.createdAt).toLocaleString('ru-RU');
+                
+                let statusText = session.status;
+                let statusClass = '';
+                if (session.status === 'completed') { statusText = '✓ Завершена'; statusClass = 'status-completed'; }
+                else if (session.status === 'awaiting_second') { statusText = 'Ожидает МОРВ'; }
+                else if (session.status === 'error') { statusText = '❌ Ошибка'; statusClass = 'status-error'; }
+
+                card.innerHTML = `
+                    <div class="session-header">
+                        <span class="session-id">${session.sessionId.slice(0, 8)}...</span>
+                        <span class="session-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="session-info">
+                        <div>📅 ${date}</div>
+                        <div>📄 ${session.first_file_name || 'Нет файла'}</div>
+                    </div>
+                `;
+                return card;
+            }
+
+            function showSessionDetails(session) {
+                const modal = document.getElementById('sessionModal');
+                const body = document.getElementById('modalBody');
+                
+                let filesHtml = '';
+                if (session.files && session.files.length) {
+                    filesHtml = session.files.map(f => `
+                        <div class="download-item">
+                            <div class="download-item-info">
+                                <div class="download-item-name">${f.filename}</div>
+                                <div class="download-item-size">${(f.size / 1024 / 1024).toFixed(2)} MB</div>
+                            </div>
+                            <a href="/fire/api/session/${session.sessionId}/download/${encodeURIComponent(f.filename)}" class="download-btn">Скачать</a>
+                        </div>
+                    `).join('');
+                } else {
+                    filesHtml = '<div style="color:#64748b;text-align:center;">Файлов нет</div>';
+                }
+
+                body.innerHTML = `
+                    <div style="margin-bottom:20px;">
+                        <div style="font-size:0.8rem;color:#64748b;">ID Сессии</div>
+                        <div style="font-family:monospace;">${session.sessionId}</div>
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <div style="font-size:0.8rem;color:#64748b;">Статус</div>
+                        <div>${session.status}</div>
+                    </div>
+                    <h4>Результаты:</h4>
+                    <div style="margin-top:10px;">${filesHtml}</div>
+                `;
+                modal.classList.add('active');
+            }
+
+            window.closeModal = function() {
+                document.getElementById('sessionModal').classList.remove('active');
+            };
+
+            // ---- Логика Загрузки Файлов ----
+
+            function initializeUploadAreas() {
+                setupUploadArea('first', (file) => {
+                    _firstDroppedFile = file;
+                    document.getElementById('firstFileName').textContent = file.name;
+                    document.getElementById('firstFileInfo').style.display = 'block';
+                    document.getElementById('uploadFirstBtn').disabled = false;
+                });
+
+                setupUploadArea('second', (file) => {
+                    _secondDroppedFile = file;
+                    document.getElementById('secondFileName').textContent = file.name;
+                    document.getElementById('secondFileInfo').style.display = 'block';
+                    document.getElementById('uploadSecondBtn').disabled = false;
+                });
+            }
+
+            function setupUploadArea(type, callback) {
+                const area = document.getElementById(`${type}UploadArea`);
+                const input = document.getElementById(`${type}FileInput`);
+                const btn = document.getElementById(`upload${type.charAt(0).toUpperCase() + type.slice(1)}Btn`);
+
+                area.addEventListener('click', () => {
+                    if (!area.classList.contains('disabled')) {
+                        input.click();
+                    }
+                });
+                input.addEventListener('change', (e) => {
+                    if (e.target.files.length) {
+                        callback(e.target.files[0]);
+                        // Активируем кнопку явно
+                        if (btn) btn.disabled = false;
+                    }
+                });
+
+                area.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if(!area.classList.contains('disabled')) area.classList.add('dragover');
+                });
+                area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+                area.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    area.classList.remove('dragover');
+                    if (!area.classList.contains('disabled') && e.dataTransfer.files.length) {
+                        callback(e.dataTransfer.files[0]);
+                        // Активируем кнопку явно
+                        if (btn) btn.disabled = false;
+                    }
+                });
+            }
+
+            async function uploadFirstFile() {
+                const file = _firstDroppedFile || document.getElementById('firstFileInput').files[0];
+                if (!file) return;
+
+                const btn = document.getElementById('uploadFirstBtn');
+                const progress = document.getElementById('uploadProgress1');
+                
+                btn.disabled = true;
+                btn.textContent = 'Загрузка...';
+                progress.style.width = '30%';
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const resp = await fetch('/fire/api/upload_first', { method: 'POST', body: formData });
+                    const data = await resp.json();
+
+                    if (!resp.ok) throw new Error(data.detail || 'Ошибка загрузки');
+
+                    currentSessionId = data.sessionId;
+                    progress.style.width = '100%';
+                    
+                    showToast('ГПЗУ загружен. Обработка даты...', 'success');
+                    
+                    // Ждем завершения обработки первого этапа
+                    await waitForStatus('awaiting_second', 'error');
+                    
+                    // Обновляем UI после успеха
+                    firstFileProcessed = true;
+                    document.getElementById('dateResult').style.display = 'flex';
+                    document.getElementById('extractedDate').textContent = data.extractedDate || 'Не определена';
+                    
+                    // Активируем второй шаг
+                    document.getElementById('step2').classList.remove('disabled');
+                    document.getElementById('secondUploadArea').classList.remove('disabled');
+                    document.getElementById('secondUploadArea').querySelector('.upload-text').textContent = 'Нажмите или перетащите PDF (МОРВ)';
+                    
+                    showToast('ГПЗУ обработан. Загружайте МОРВ.', 'success');
+
+                } catch (e) {
+                    console.error(e);
+                    showToast(`Ошибка: ${e.message}`, 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Загрузить и обработать';
+                    progress.style.width = '0%';
+                }
+            }
+
+            async function uploadSecondFile() {
+                const file = _secondDroppedFile || document.getElementById('secondFileInput').files[0];
+                if (!file || !currentSessionId) return;
+
+                const btn = document.getElementById('uploadSecondBtn');
+                const progress = document.getElementById('uploadProgress2');
+                
+                btn.disabled = true;
+                btn.textContent = 'Загрузка...';
+                progress.style.width = '30%';
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const resp = await fetch(`/fire/api/upload_second?sessionId=${currentSessionId}`, { 
+                        method: 'POST', 
+                        body: formData 
+                    });
+                    const data = await resp.json();
+
+                    if (!resp.ok) throw new Error(data.detail || 'Ошибка загрузки');
+
+                    progress.style.width = '100%';
+                    showToast('МОРВ загружен. Началась комплексная обработка...', 'info');
+
+                    // Показываем статусбар
+                    showProcessingStatus();
+                    
+                    // Запускаем мониторинг статуса
+                    startStatusMonitoring();
+
+                } catch (e) {
+                    console.error(e);
+                    showToast(`Ошибка: ${e.message}`, 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Загрузить и обработать';
+                    progress.style.width = '0%';
+                }
+            }
+
+            // ---- Логика Статусбара ----
+
+            function showProcessingStatus() {
+                const statusCard = document.getElementById('processingStatus');
+                statusCard.classList.add('active');
+                resetSteps();
+            }
+
+            function resetSteps() {
+                ['step-load', 'step-extract', 'step-norms', 'step-drawings', 'step-report'].forEach(id => {
+                    const el = document.getElementById(id);
+                    el.classList.remove('completed', 'current');
+                });
+                setStepCurrent('step-load');
+                document.getElementById('statusMessage').textContent = 'Загрузка файла на сервер...';
+                document.getElementById('statusSubMessage').textContent = 'Подготовка к анализу';
+            }
+
+            function setStepCurrent(stepId) {
+                resetSteps(); // Сначала сбросим все (упрощенно)
+                // В реальном времени мы просто добавляем класс current нужному
+                document.querySelectorAll('.step-item').forEach(el => el.classList.remove('current'));
+                const el = document.getElementById(stepId);
+                if(el) el.classList.add('current');
+            }
+
+            function markStepCompleted(stepId) {
+                const el = document.getElementById(stepId);
+                if(el) {
+                    el.classList.remove('current');
+                    el.classList.add('completed');
+                    el.querySelector('.step-icon').textContent = '✓';
+                }
+            }
+
+            function updateStatusUI(statusData) {
+                const status = statusData.status;
+                const msg = document.getElementById('statusMessage');
+                const subMsg = document.getElementById('statusSubMessage');
+                const badge = document.getElementById('statusBadge');
+
+                badge.textContent = status === 'processing_second' ? 'Обработка...' : status;
+
+                // Логика отображения шагов в зависимости от статуса
+                if (status === 'processing_second') {
+                    // Детализация внутри статуса processing_second через подстатусы или время
+                    // Так как бэкенд может не слать подстатусы, эмулируем по времени или ключевым словам
+                    // Если бэкенд шлет детали в поле message, используем их
+                    if (statusData.message) {
+                         msg.textContent = statusData.message;
+                    } else {
+                        // Эвристика по времени (примерная)
+                        const now = Date.now();
+                        const start = new Date(statusData.started_at || now).getTime();
+                        const diffSec = (now - start) / 1000;
+
+                        if (diffSec < 10) {
+                            setStepCurrent('step-load');
+                            msg.textContent = 'Сохранение файла...';
+                        } else if (diffSec < 40) {
+                            markStepCompleted('step-load');
+                            setStepCurrent('step-extract');
+                            msg.textContent = 'Извлечение текста и поиск страниц...';
+                            subMsg.textContent = 'Анализ структуры PDF';
+                        } else if (diffSec < 120) {
+                            markStepCompleted('step-extract');
+                            setStepCurrent('step-norms');
+                            msg.textContent = 'Поиск ссылок на нормативы...';
+                            subMsg.textContent = 'Сверка с реестром СП/ГОСТ/ФЗ';
+                        } else if (diffSec < 300) {
+                            markStepCompleted('step-norms');
+                            setStepCurrent('step-drawings');
+                            msg.textContent = 'Анализ архитектурных чертежей (VLM)...';
+                            subMsg.textContent = 'Работа нейросети qwen3.6 (может занять время)';
+                        } else {
+                            markStepCompleted('step-drawings');
+                            setStepCurrent('step-report');
+                            msg.textContent = 'Формирование итоговых отчетов...';
+                            subMsg.textContent = 'Генерация Excel таблиц';
+                        }
+                    }
+                } else if (status === 'completed') {
+                    ['step-load', 'step-extract', 'step-norms', 'step-drawings', 'step-report'].forEach(markStepCompleted);
+                    msg.textContent = 'Обработка успешно завершена!';
+                    subMsg.textContent = 'Все файлы сформированы';
+                    badge.textContent = 'Готово';
+                    badge.className = 'session-status status-completed';
+                    stopStatusMonitoring();
+                    showResults(statusData);
+                } else if (status === 'error') {
+                    msg.textContent = 'Произошла ошибка при обработке';
+                    subMsg.textContent = statusData.error || 'Неизвестная ошибка';
+                    badge.textContent = 'Ошибка';
+                    stopStatusMonitoring();
+                    showToast('Ошибка обработки: ' + (statusData.error || ''), 'error');
+                }
+            }
+
+            function startStatusMonitoring() {
+                if (!currentSessionId) return;
+                
+                // Первый вызов сразу
+                checkStatusLoop();
+                
+                // Затем каждые 2 секунды
+                statusCheckInterval = setInterval(checkStatusLoop, 2000);
+            }
+
+            async function checkStatusLoop() {
+                try {
+                    const resp = await fetch(`/fire/api/session/${currentSessionId}/status`);
+                    if (!resp.ok) return;
+                    const data = await resp.json();
+                    updateStatusUI(data);
+                } catch (e) {
+                    console.error('Polling error:', e);
+                }
+            }
+
+            function stopStatusMonitoring() {
+                if (statusCheckInterval) {
+                    clearInterval(statusCheckInterval);
+                    statusCheckInterval = null;
+                }
+            }
+
+            async function waitForStatus(targetStatus, errorStatus = 'error') {
+                return new Promise((resolve, reject) => {
+                    const interval = setInterval(async () => {
+                        try {
+                            const resp = await fetch(`/fire/api/session/${currentSessionId}/status`);
+                            const data = await resp.json();
+                            
+                            if (data.status === targetStatus) {
+                                clearInterval(interval);
+                                resolve(data);
+                            } else if (data.status === errorStatus) {
+                                clearInterval(interval);
+                                reject(new Error(data.error || 'Ошибка обработки'));
+                            }
+                        } catch (e) {
+                            clearInterval(interval);
+                            reject(e);
+                        }
+                    }, 1500);
+                });
+            }
+
+            function showResults(sessionData) {
+                setTimeout(() => {
+                    document.getElementById('step2').style.display = 'none';
+                    document.getElementById('step3').style.display = 'block';
+                    
+                    const list = document.getElementById('downloadList');
+                    if (sessionData.files && sessionData.files.length) {
+                        list.innerHTML = sessionData.files.map(f => `
+                            <div class="download-item">
+                                <div class="download-item-info">
+                                    <div class="download-item-name">${f.filename}</div>
+                                    <div class="download-item-size">${(f.size / 1024 / 1024).toFixed(2)} MB</div>
+                                </div>
+                                <a href="/fire/api/session/${currentSessionId}/download/${encodeURIComponent(f.filename)}" class="download-btn">Скачать</a>
+                            </div>
+                        `).join('');
+                    } else {
+                        list.innerHTML = '<div style="text-align:center;color:#64748b;">Файлы не сгенерированы</div>';
+                    }
+                }, 1000);
+            }
+
+            window.startNewSession = function() {
+                location.reload();
+            };
+
+            function resetStep1() {
+                _firstDroppedFile = null;
+                document.getElementById('firstFileInput').value = '';
+                document.getElementById('firstFileInfo').style.display = 'none';
+                document.getElementById('uploadFirstBtn').disabled = true;
+                document.getElementById('uploadFirstBtn').textContent = 'Загрузить и обработать';
+                document.getElementById('uploadProgress1').style.width = '0%';
+            }
+
+            function resetStep2() {
+                _secondDroppedFile = null;
+                document.getElementById('secondFileInput').value = '';
+                document.getElementById('secondFileInfo').style.display = 'none';
+                document.getElementById('uploadSecondBtn').disabled = true;
+                document.getElementById('uploadSecondBtn').textContent = 'Загрузить и обработать';
+                document.getElementById('uploadProgress2').style.width = '0%';
+                document.getElementById('processingStatus').classList.remove('active');
+                stopStatusMonitoring();
+            }
+
+            function showToast(msg, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `<span>${msg}</span><button class="btn-icon" onclick="this.parentElement.remove()">✕</button>`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
+            }
+
+            window.showToast = showToast;
+            window.loadSessions = loadSessions;
+            window.switchTab = switchTab;
+            window.startNewSession = startNewSession;
+            window.closeModal = closeModal;
+            window.resetStep1 = resetStep1;
+            window.resetStep2 = resetStep2;
+        })();
+    </script>
+</body>
+</html>
