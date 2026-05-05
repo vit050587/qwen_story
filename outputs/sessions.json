@@ -1,0 +1,173 @@
+{
+  "63501210-1398-4dd6-a1f8-265688ac9097": {
+    "sessionId": "63501210-1398-4dd6-a1f8-265688ac9097",
+    "created_at": "2026-04-30T07:27:44.728004Z",
+    "status": "error",
+    "first_file_name": "K MOPB.pdf",
+    "first_file_path": "./uploads/K_MOPB.pdf",
+    "second_file_name": null,
+    "second_file_path": null,
+    "extracted_date": "не найдено",
+    "files": [],
+    "error": "[Errno 2] No such file or directory: 'data/Perechen.pdf'"
+  },
+  "3cc6439a-9b30-451a-98b0-a30e926d625f": {
+    "sessionId": "3cc6439a-9b30-451a-98b0-a30e926d625f",
+    "created_at": "2026-04-30T13:05:20.880469Z",
+    "status": "completed",
+    "first_file_name": "01-01-00-03-01 ПЗ2.2.pdf",
+    "first_file_path": "./uploads/01-01-00-03-01_2.2_2.pdf",
+    "second_file_name": "01-09-00-01-01 ПБ1 (6).pdf",
+    "second_file_path": "./uploads/3cc6439a-9b30-451a-98b0-a30e926d625f_01-09-00-01-01_1_6.pdf",
+    "extracted_date": "28.04.2025",
+    "files": [
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/все_СП_результаты.xlsx",
+        "filename": "все_СП_результаты.xlsx",
+        "size": 7424,
+        "download_url": "/fire/api/session/3cc6439a-9b30-451a-98b0-a30e926d625f/download/все_СП_результаты.xlsx"
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/69_ФЗ_сравнение_detailed.xlsx",
+        "filename": "69_ФЗ_сравнение_detailed.xlsx",
+        "size": 5619
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/123_ФЗ_сравнение_detailed.xlsx",
+        "filename": "123_ФЗ_сравнение_detailed.xlsx",
+        "size": 41428
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/184_ФЗ_сравнение_detailed.xlsx",
+        "filename": "184_ФЗ_сравнение_detailed.xlsx",
+        "size": 5616
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/384_ФЗ_сравнение_detailed.xlsx",
+        "filename": "384_ФЗ_сравнение_detailed.xlsx",
+        "size": 8367
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_1.13130_сравнение_detailed.xlsx",
+        "filename": "СП_1.13130_сравнение_detailed.xlsx",
+        "size": 38240
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_2.13130_сравнение_detailed.xlsx",
+        "filename": "СП_2.13130_сравнение_detailed.xlsx",
+        "size": 16885
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_3.13130_сравнение_detailed.xlsx",
+        "filename": "СП_3.13130_сравнение_detailed.xlsx",
+        "size": 8539
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_4.13130_сравнение_detailed.xlsx",
+        "filename": "СП_4.13130_сравнение_detailed.xlsx",
+        "size": 20213
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_6.13130_сравнение_detailed.xlsx",
+        "filename": "СП_6.13130_сравнение_detailed.xlsx",
+        "size": 7800
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_7.13130_сравнение_detailed.xlsx",
+        "filename": "СП_7.13130_сравнение_detailed.xlsx",
+        "size": 19139
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_8.13130_сравнение_detailed.xlsx",
+        "filename": "СП_8.13130_сравнение_detailed.xlsx",
+        "size": 9443
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_10.13130_сравнение_detailed.xlsx",
+        "filename": "СП_10.13130_сравнение_detailed.xlsx",
+        "size": 13190
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_54.13330_сравнение_detailed.xlsx",
+        "filename": "СП_54.13330_сравнение_detailed.xlsx",
+        "size": 10040
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_59.13330_сравнение_detailed.xlsx",
+        "filename": "СП_59.13330_сравнение_detailed.xlsx",
+        "size": 13664
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_60.13330_сравнение_detailed.xlsx",
+        "filename": "СП_60.13330_сравнение_detailed.xlsx",
+        "size": 7654
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_113.13330_сравнение_detailed.xlsx",
+        "filename": "СП_113.13330_сравнение_detailed.xlsx",
+        "size": 14604
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_118.13330_сравнение_detailed.xlsx",
+        "filename": "СП_118.13330_сравнение_detailed.xlsx",
+        "size": 6302
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_156.13130_сравнение_detailed.xlsx",
+        "filename": "СП_156.13130_сравнение_detailed.xlsx",
+        "size": 6483
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_256.1325800_сравнение_detailed.xlsx",
+        "filename": "СП_256.1325800_сравнение_detailed.xlsx",
+        "size": 5575
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_484.1311500_сравнение_detailed.xlsx",
+        "filename": "СП_484.1311500_сравнение_detailed.xlsx",
+        "size": 11611
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_485.1311500_сравнение_detailed.xlsx",
+        "filename": "СП_485.1311500_сравнение_detailed.xlsx",
+        "size": 11465
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/СП_486.1311500_сравнение_detailed.xlsx",
+        "filename": "СП_486.1311500_сравнение_detailed.xlsx",
+        "size": 7810
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/ГОСТ_12.1.004_сравнение_detailed.xlsx",
+        "filename": "ГОСТ_12.1.004_сравнение_detailed.xlsx",
+        "size": 5577
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/ГОСТ_31251_сравнение_detailed.xlsx",
+        "filename": "ГОСТ_31251_сравнение_detailed.xlsx",
+        "size": 5576
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/ГОСТ_Р_53296_сравнение_detailed.xlsx",
+        "filename": "ГОСТ_Р_53296_сравнение_detailed.xlsx",
+        "size": 8485
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/ГОСТ_Р_56177_сравнение_detailed.xlsx",
+        "filename": "ГОСТ_Р_56177_сравнение_detailed.xlsx",
+        "size": 5633
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/Постановление_Правительства_РФ_от_16.02.2008_N_87_сравнение_detailed.xlsx",
+        "filename": "Постановление_Правительства_РФ_от_16.02.2008_N_87_сравнение_detailed.xlsx",
+        "size": 6392
+      },
+      {
+        "path": "./outputs/3cc6439a-9b30-451a-98b0-a30e926d625f/Постановление_Правительства_РФ_от_16.09.2020_N_1479_сравнение_detailed.xlsx",
+        "filename": "Постановление_Правительства_РФ_от_16.09.2020_N_1479_сравнение_detailed.xlsx",
+        "size": 6381
+      }
+    ],
+    "error": null
+  }
+}
