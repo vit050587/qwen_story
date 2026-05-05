@@ -938,10 +938,19 @@
             function setupUploadArea(type, callback) {
                 const area = document.getElementById(`${type}UploadArea`);
                 const input = document.getElementById(`${type}FileInput`);
+                const btn = document.getElementById(`upload${type.charAt(0).toUpperCase() + type.slice(1)}Btn`);
 
-                area.addEventListener('click', () => input.click());
+                area.addEventListener('click', () => {
+                    if (!area.classList.contains('disabled')) {
+                        input.click();
+                    }
+                });
                 input.addEventListener('change', (e) => {
-                    if (e.target.files.length) callback(e.target.files[0]);
+                    if (e.target.files.length) {
+                        callback(e.target.files[0]);
+                        // Активируем кнопку явно
+                        if (btn) btn.disabled = false;
+                    }
                 });
 
                 area.addEventListener('dragover', (e) => {
@@ -954,6 +963,8 @@
                     area.classList.remove('dragover');
                     if (!area.classList.contains('disabled') && e.dataTransfer.files.length) {
                         callback(e.dataTransfer.files[0]);
+                        // Активируем кнопку явно
+                        if (btn) btn.disabled = false;
                     }
                 });
             }
