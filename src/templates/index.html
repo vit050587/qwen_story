@@ -1100,17 +1100,53 @@
                 const subMsg = document.getElementById('statusSubMessage');
                 const badge = document.getElementById('statusBadge');
 
-                badge.textContent = status === 'processing_second' ? 'Обработка...' : status;
+                // Отображение статуса в бейдже
+                if (status === 'processing_drawings') {
+                    badge.textContent = 'Обработка...';
+                } else if (status === 'processing_norms') {
+                    badge.textContent = 'Анализ норм...';
+                } else if (status === 'analyzing_drawings') {
+                    badge.textContent = 'Анализ чертежей...';
+                } else if (status === 'processing_second') {
+                    badge.textContent = 'Обработка...';
+                } else if (status === 'completed') {
+                    badge.textContent = 'Готово';
+                } else if (status === 'error') {
+                    badge.textContent = 'Ошибка';
+                } else {
+                    badge.textContent = status;
+                }
 
                 // Логика отображения шагов в зависимости от статуса
-                if (status === 'processing_second') {
-                    // Детализация внутри статуса processing_second через подстатусы или время
-                    // Так как бэкенд может не слать подстатусы, эмулируем по времени или ключевым словам
-                    // Если бэкенд шлет детали в поле message, используем их
+                if (status === 'processing_drawings') {
+                    // ЭТАП 1: Детекция страниц с чертежами (75%)
+                    markStepCompleted('step-load');
+                    markStepCompleted('step-extract');
+                    setStepCurrent('step-drawings');
+                    msg.textContent = statusData.message || 'Поиск страниц с чертежами...';
+                    subMsg.textContent = 'Сканирование PDF на наличие листов А3+';
+                } else if (status === 'processing_norms') {
+                    // ЭТАП 2: Обработка текста и сравнение норм
+                    markStepCompleted('step-load');
+                    markStepCompleted('step-extract');
+                    markStepCompleted('step-drawings');
+                    setStepCurrent('step-norms');
+                    msg.textContent = statusData.message || 'Анализ текста и поиск ссылок на нормы...';
+                    subMsg.textContent = 'Сверка с реестром СП/ГОСТ/ФЗ';
+                } else if (status === 'analyzing_drawings') {
+                    // ЭТАП 3: Анализ чертежей через VLM
+                    markStepCompleted('step-load');
+                    markStepCompleted('step-extract');
+                    markStepCompleted('step-drawings');
+                    markStepCompleted('step-norms');
+                    setStepCurrent('step-report');
+                    msg.textContent = statusData.message || 'Анализ чертежей нейросетью...';
+                    subMsg.textContent = 'Работа нейросети qwen3.6 (может занять время)';
+                } else if (status === 'processing_second') {
+                    // Старый статус (для обратной совместимости)
                     if (statusData.message) {
                          msg.textContent = statusData.message;
                     } else {
-                        // Эвристика по времени (примерная)
                         const now = Date.now();
                         const start = new Date(statusData.started_at || now).getTime();
                         const diffSec = (now - start) / 1000;

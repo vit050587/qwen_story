@@ -6,13 +6,13 @@ from .config import load_config
 def detect_and_save_drawings(pdf_path: str, output_dir: str) -> list:
     """
     Сканирует PDF, находит страницы с размером большей стороны > DRAWING_MIN_SIZE_CM.
-    Сохранает каждую такую страницу в отдельный PDF файл в папке output_dir/drawings/.
+    Сохранает каждую такую страницу в отдельный PDF файл в папке output_dir/drawing_pages/.
     
     Возвращает список словарей:
     [{'page_num': 5, 'file_path': '/path/to/dw_page_005.pdf', 'size': '42.0x29.7cm'}, ...]
     """
     config = load_config()
-    drawings_dir = Path(output_dir) / "drawings"
+    drawings_dir = Path(output_dir) / "drawing_pages"
     drawings_dir.mkdir(parents=True, exist_ok=True)
     
     drawing_pages_info = []
