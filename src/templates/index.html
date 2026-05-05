@@ -925,13 +925,21 @@
                     document.getElementById('firstFileName').textContent = file.name;
                     document.getElementById('firstFileInfo').style.display = 'block';
                     document.getElementById('uploadFirstBtn').disabled = false;
+                    // Скрываем область загрузки после выбора файла
+                    document.getElementById('firstUploadArea').style.display = 'none';
                 });
 
                 setupUploadArea('second', (file) => {
+                    if (!firstFileProcessed) {
+                        showToast('Сначала обработайте ГПЗУ', 'warning');
+                        return;
+                    }
                     _secondDroppedFile = file;
                     document.getElementById('secondFileName').textContent = file.name;
                     document.getElementById('secondFileInfo').style.display = 'block';
                     document.getElementById('uploadSecondBtn').disabled = false;
+                    // Скрываем область загрузки после выбора файла
+                    document.getElementById('secondUploadArea').style.display = 'none';
                 });
             }
 
@@ -1002,9 +1010,13 @@
                     document.getElementById('dateResult').style.display = 'flex';
                     document.getElementById('extractedDate').textContent = data.extractedDate || 'Не определена';
                     
-                    // Скрываем область загрузки и информацию о файле
+                    // Скрываем только область загрузки, информацию о файле оставляем видимой
                     document.getElementById('firstUploadArea').style.display = 'none';
-                    document.getElementById('firstFileInfo').style.display = 'none';
+                    // firstFileInfo остается видимым
+                    
+                    // Меняем текст кнопки на неактивный
+                    btn.textContent = '✓ Загружено';
+                    btn.disabled = true;
                     
                     // Активируем второй шаг
                     document.getElementById('step2').classList.remove('disabled');
@@ -1286,6 +1298,10 @@
                 document.getElementById('uploadFirstBtn').disabled = true;
                 document.getElementById('uploadFirstBtn').textContent = 'Загрузить и обработать';
                 document.getElementById('uploadProgress1').style.width = '0%';
+                // Сбрасываем результат даты
+                document.getElementById('dateResult').style.display = 'none';
+                // Сбрасываем флаг обработки
+                firstFileProcessed = false;
             }
 
             function resetStep2() {
