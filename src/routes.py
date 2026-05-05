@@ -286,6 +286,9 @@ def api_status(sessionId: str):
                 - processing_norms
                 - awaiting_second
                 - processing_second
+                - processing_drawings
+                - processing_norms
+                - analyzing_drawings
                 - completed
                 - error
             extractedDate:

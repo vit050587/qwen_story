@@ -15,6 +15,8 @@ from .mopb_extractor import searchМОРВ
 from .reference_parser import punktМОРВ
 from .comparison import comparisionМОРВ
 from .json_saver import process_complex_json_to_xlsx, json_to_excel_all_docs
+from .drawings_detector import detect_and_save_drawings
+from .drawings_analyzer import run_analysis
 
 
 _processing_lock = threading.Lock()
@@ -210,13 +212,34 @@ class SessionManager:
 
     def _process_mopb_bg(self, sessionId: str, mopb_path: str) -> None:
         try:
+            session_dir = os.path.join(self.output_folder, sessionId)
+            os.makedirs(session_dir, exist_ok=True)
+            
+            # ==========================================
+            # ЭТАП 1: Детекция страниц с чертежами (75%)
+            # ==========================================
+            with self._state_lock:
+                self._sessions[sessionId]["status"] = "processing_drawings"
+                self._sessions[sessionId]["message"] = "Поиск страниц с чертежами..."
+                self._save()
+            
+            detected_drawings = detect_and_save_drawings(
+                pdf_path=mopb_path,
+                output_dir=session_dir
+            )
+            
+            # ==========================================
+            # ЭТАП 2: Обработка текста и сравнение норм (старый функционал)
+            # ==========================================
+            with self._state_lock:
+                self._sessions[sessionId]["status"] = "processing_norms"
+                self._sessions[sessionId]["message"] = "Анализ текста и поиск ссылок на нормы..."
+                self._save()
+            
             with _processing_lock:
                 searchМОРВ(MOPB_PDF=mopb_path)
                 punktМОРВ()
                 comparisionМОРВ()
-
-                session_dir = os.path.join(self.output_folder, sessionId)
-                os.makedirs(session_dir, exist_ok=True)
 
                 new_files = []
                 for file_path in process_complex_json_to_xlsx(
@@ -229,8 +252,33 @@ class SessionManager:
                             "size": os.path.getsize(file_path),
                         }
                     )
-            # сортировка файлов по прицнипу ФЗ -> СП -> ГОСТ -> ПП
-
+            
+            # ==========================================
+            # ЭТАП 3: Анализ чертежей через VLM
+            # ==========================================
+            if detected_drawings:
+                with self._state_lock:
+                    self._sessions[sessionId]["status"] = "analyzing_drawings"
+                    self._sessions[sessionId]["message"] = "Анализ чертежей нейросетью..."
+                    self._save()
+                
+                drawing_report_path = run_analysis(
+                    session_id=sessionId,
+                    detected_drawings=detected_drawings,
+                    output_dir=session_dir
+                )
+                
+                if drawing_report_path and os.path.exists(drawing_report_path):
+                    new_files.append({
+                        "path": drawing_report_path,
+                        "filename": os.path.basename(drawing_report_path),
+                        "size": os.path.getsize(drawing_report_path),
+                    })
+            
+            # ==========================================
+            # ФИНАЛ: Сохранение результатов
+            # ==========================================
+            # сортировка файлов по принципу ФЗ -> СП -> ГОСТ -> ПП
             new_files_sorted = sorted(new_files, key=self.get_sort_key)
 
             with self._state_lock:
@@ -240,6 +288,7 @@ class SessionManager:
                     if f["filename"] not in existing:
                         files.append(f)
                 self._sessions[sessionId]["status"] = "completed"
+                self._sessions[sessionId]["message"] = None
                 self._save()
         except Exception as exc:
             traceback.print_exc()
