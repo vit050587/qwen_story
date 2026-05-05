@@ -819,6 +819,7 @@
                     <div class="progress-bar">
                         <div class="progress-fill" id="uploadProgress2"></div>
                     </div>
+                    <p class="upload-hint" id="secondFileStatus" style="margin-top: 8px; font-size: 0.8rem;"></p>
                 </div>
 
                 <button class="btn btn-primary" id="uploadSecondBtn" onclick="uploadSecondFile()" disabled>
@@ -1142,20 +1143,25 @@
                 const form = new FormData(); form.append('file', file);
                 const btn = document.getElementById('uploadSecondBtn');
                 const prog = document.getElementById('uploadProgress2');
+                const statusText = document.getElementById('secondFileStatus');
                 btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Загрузка...';
-                prog.style.width = '30%';
+                prog.style.width = '20%';
+                statusText.textContent = 'Загрузка файла на сервер...';
                 try {
                     const resp = await fetch(`/fire/api/upload_second?sessionId=${currentSessionId}`, { method: 'POST', body: form });
                     if (!resp.ok) throw new Error((await resp.json()).detail);
-                    btn.innerHTML = '<span class="spinner"></span> Сравнение...';
-                    prog.style.width = '60%';
+                    btn.innerHTML = '<span class="spinner"></span> Сравнение с нормами...';
+                    prog.style.width = '50%';
+                    statusText.textContent = 'Файл загружен. Выполняется сравнение с нормативной базой...';
                     startSecondStatusChecking(currentSessionId);
-                } catch (e) { showToast(e.message, 'error'); btn.disabled = false; btn.textContent = 'Загрузить и обработать'; prog.style.width = '0%'; }
+                } catch (e) { showToast(e.message, 'error'); btn.disabled = false; btn.textContent = 'Загрузить и обработать'; prog.style.width = '0%'; statusText.textContent = ''; }
             };
 
             function startSecondStatusChecking(sessionId) {
                 if (statusCheckInterval) clearInterval(statusCheckInterval);
                 let count = 0;
+                const prog = document.getElementById('uploadProgress2');
+                const statusText = document.getElementById('secondFileStatus');
                 statusCheckInterval = setInterval(async () => {
                     try {
                         count++;
@@ -1165,12 +1171,17 @@
                             clearInterval(statusCheckInterval);
                             const sess = await (await fetch(`/fire/api/session/${sessionId}`)).json();
                             document.getElementById('uploadSecondBtn').textContent = '✓ Обработано';
-                            document.getElementById('uploadProgress2').style.width = '100%';
+                            prog.style.width = '100%';
+                            statusText.textContent = 'Обработка завершена успешно!';
                             showDownloadLinks(sess.files);
                             showToast('Готово', 'success');
                         } else if (data.status === 'error') {
                             clearInterval(statusCheckInterval);
+                            statusText.textContent = 'Ошибка при обработке';
                             showToast(data.error, 'error');
+                        } else if (data.status === 'processing') {
+                            prog.style.width = '75%';
+                            statusText.textContent = 'Идёт обработка документа...';
                         }
                         if (count > 1800) { clearInterval(statusCheckInterval); showToast('Превышено время ожидания', 'warning'); }
                     } catch (e) { }
@@ -1217,6 +1228,7 @@
                 document.getElementById('uploadSecondBtn').disabled = true;
                 document.getElementById('uploadSecondBtn').textContent = 'Загрузить и обработать';
                 document.getElementById('uploadProgress2').style.width = '0%';
+                document.getElementById('secondFileStatus').textContent = '';
                 document.getElementById('secondFileInput').value = '';
                 _secondDroppedFile = null;
             };
