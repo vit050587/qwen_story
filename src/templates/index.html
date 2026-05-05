@@ -1002,6 +1002,10 @@
                     document.getElementById('dateResult').style.display = 'flex';
                     document.getElementById('extractedDate').textContent = data.extractedDate || 'Не определена';
                     
+                    // Скрываем область загрузки и информацию о файле
+                    document.getElementById('firstUploadArea').style.display = 'none';
+                    document.getElementById('firstFileInfo').style.display = 'none';
+                    
                     // Активируем второй шаг
                     document.getElementById('step2').classList.remove('disabled');
                     document.getElementById('secondUploadArea').classList.remove('disabled');
@@ -1043,6 +1047,11 @@
 
                     progress.style.width = '100%';
                     showToast('МОРВ загружен. Началась комплексная обработка...', 'info');
+
+                    // Блокируем кнопку и скрываем область загрузки
+                    btn.textContent = 'Обработка...';
+                    document.getElementById('secondUploadArea').style.display = 'none';
+                    document.getElementById('secondFileInfo').style.display = 'none';
 
                     // Показываем статусбар
                     showProcessingStatus();
@@ -1273,6 +1282,7 @@
                 _firstDroppedFile = null;
                 document.getElementById('firstFileInput').value = '';
                 document.getElementById('firstFileInfo').style.display = 'none';
+                document.getElementById('firstUploadArea').style.display = 'block';
                 document.getElementById('uploadFirstBtn').disabled = true;
                 document.getElementById('uploadFirstBtn').textContent = 'Загрузить и обработать';
                 document.getElementById('uploadProgress1').style.width = '0%';
@@ -1286,6 +1296,7 @@
                 document.getElementById('uploadSecondBtn').textContent = 'Загрузить и обработать';
                 document.getElementById('uploadProgress2').style.width = '0%';
                 document.getElementById('processingStatus').classList.remove('active');
+                document.getElementById('secondUploadArea').style.display = 'block';
                 stopStatusMonitoring();
             }
 
