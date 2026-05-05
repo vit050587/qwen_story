@@ -1265,25 +1265,25 @@
             }
 
             function showResults(sessionData) {
-                setTimeout(() => {
-                    document.getElementById('step2').style.display = 'none';
-                    document.getElementById('step3').style.display = 'block';
-                    
-                    const list = document.getElementById('downloadList');
-                    if (sessionData.files && sessionData.files.length) {
-                        list.innerHTML = sessionData.files.map(f => `
-                            <div class="download-item">
-                                <div class="download-item-info">
-                                    <div class="download-item-name">${f.filename}</div>
-                                    <div class="download-item-size">${(f.size / 1024 / 1024).toFixed(2)} MB</div>
-                                </div>
-                                <a href="/fire/api/session/${currentSessionId}/download/${encodeURIComponent(f.filename)}" class="download-btn">Скачать</a>
+                // Скрываем статусбар и шаг 2, показываем шаг 3 с результатами
+                document.getElementById('processingStatus').classList.remove('active');
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'block';
+                
+                const list = document.getElementById('downloadList');
+                if (sessionData.files && sessionData.files.length) {
+                    list.innerHTML = sessionData.files.map(f => `
+                        <div class="download-item">
+                            <div class="download-item-info">
+                                <div class="download-item-name">${f.filename}</div>
+                                <div class="download-item-size">${(f.size / 1024 / 1024).toFixed(2)} MB</div>
                             </div>
-                        `).join('');
-                    } else {
-                        list.innerHTML = '<div style="text-align:center;color:#64748b;">Файлы не сгенерированы</div>';
-                    }
-                }, 1000);
+                            <a href="/fire/api/session/${currentSessionId}/download/${encodeURIComponent(f.filename)}" class="download-btn">Скачать</a>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<div style="text-align:center;color:#64748b;">Файлы не сгенерированы</div>';
+                }
             }
 
             window.startNewSession = function() {
